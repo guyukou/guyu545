@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.garry.mybatisbaomidou.mapper.SupplierLogMapper">
+    <resultMap id="BaseResultMap" type="com.garry.mybatisbaomidou.dos.SupplierLog">
+        <result column="id" property="id" />
+        <result column="call_times" property="callTimes" />
+    </resultMap>
+
+    <select id="selectCount" resultType="_int">
+        select count(*) from supplier_log_${shard}
+        where call_times between #{start} and #{end}
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        select id, call_times from supplier_log_${shard}
+        where call_times between #{start} and #{end}
+        order by id desc
+        limit #{a}, #{b}
+    </select>
+</mapper>

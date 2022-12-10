@@ -1,0 +1,8 @@
+# DataSource Config
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/secret_phone
+    username: root
+    password: Kou545945
+#    type: com.alibaba.druid.pool.DruidDataSource

@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    dynamic:
+      primary: ds1 #设置默认的数据源或者数据源组,默认值即为master
+      strict: true #严格匹配数据源,默认false. true未匹配到指定数据源时抛异常,false使用默认数据源
+      datasource:
+        ds1:
+          url: jdbc:mysql://localhost:3306/broker_biz_log
+          username: root
+          password: Kou545945
+          driver-class-name: com.mysql.cj.jdbc.Driver # 3.2.0开始支持SPI可省略此配置
+        ds2:
+          url: jdbc:mysql://localhost:3306/secret_phone
+          username: root
+          password: Kou545945
+          driver-class-name: com.mysql.cj.jdbc.Driver # 3.2.0开始支持SPI可省略此配置
