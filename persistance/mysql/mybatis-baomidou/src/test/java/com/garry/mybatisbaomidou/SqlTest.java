@@ -74,7 +74,7 @@ public class SqlTest {
      * 部分更新: updateById
      */
     @Test
-    public void test_UpdateById() {
+    public void test_updatePart_byId() {
         var updateParams = new User(1L, null, null, "invalidEmail");
         userDao.updateById(updateParams);
 
