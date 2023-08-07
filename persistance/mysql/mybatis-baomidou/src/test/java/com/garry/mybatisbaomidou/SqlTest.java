@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * @author guyu06
  * @date 2023/4/4 22:14
@@ -25,57 +27,69 @@ public class SqlTest {
     @Autowired
     private UserDao userDao;
 
+    private static final User user1 = new User(1L, "garry", 30, "guyu545kou@gmail.com");
+    private static final User user2 = new User(2L, "lily", 18, "lily@world.com");
+
     @BeforeEach
     public void init() {
-        userDao.save(new User(6L, "garry", 30, "guyu545kou@gmail.com"));
+        userDao.save(user1);
+        userDao.save(user2);
     }
 
 
+    /**
+     * 部分更新推荐的做法，param1传更新参数，param2传where条件
+     */
     @Test
-    public void test_UpdatePart() {
-        var toUpdateValue = new User(null,"garry",null,"invalidEmail");
-        var lambdaUpdateWrapper = new LambdaUpdateWrapper<User>()
-                .eq(User::getEmail, "guyu545kou@gmail.com")
-                ;
+    public void test_updatePart_1() {
+        var updateParams = new User(null, null, null, "invalidEmail");
+        var whereCondition = new LambdaQueryWrapper<User>()
+                .eq(User::getId, 1L);
+        userDao.update(updateParams, whereCondition);
 
-        var updateSuccess = userDao.update(toUpdateValue, lambdaUpdateWrapper);
-        Assertions.assertTrue(updateSuccess);
-
-        var me = userDao.getById(6L);
-        // 对比更新前，只更新了email字段
-        Assertions.assertEquals(new User(6L, "garry", 30, "invalidEmail"), me);
-
-        updateSuccess = userDao.update(
-                new LambdaUpdateWrapper<User>()
-                        .eq(User::getName, "garry")
-                        .set(User::getEmail, "invalidEmail2")
-        );
-        Assertions.assertTrue(updateSuccess);
-        me = userDao.getById(6L);
-        // 对比更新前，只更新了email字段
-        Assertions.assertEquals(new User(6L, "garry", 30, "invalidEmail2"), me);
+        var actualValue = userDao.getById(1L);
+        // 部分更新验证：只更新了email
+        var expectedValue = copy(user1);
+        expectedValue.setEmail("invalidEmail");
+        assertEquals(expectedValue, actualValue);
     }
 
     /**
-     * 测试updateById是否只更新非null字段
+     * 部分更新另一个方式
+     */
+    @Test
+    public void test_updatePart_2() {
+        userDao.update(
+                new LambdaUpdateWrapper<User>()
+                        .eq(User::getName, "lily")
+                        .set(User::getAge, 16)
+        );
+        var actualValue = userDao.getById(2L);
+        // 对比更新前，只更新了email字段
+        var expectedValue = copy(user2);
+        expectedValue.setAge(16);
+        assertEquals(expectedValue, actualValue);
+    }
+    /**
+     * 部分更新: updateById
      */
     @Test
     public void test_UpdateById() {
-        var toUpdateValue = new User(6L,"garry",null,"invalidEmail");
+        var updateParams = new User(1L, null, null, "invalidEmail");
+        userDao.updateById(updateParams);
 
-        var updateSuccess = userDao.updateById(toUpdateValue);
-        Assertions.assertTrue(updateSuccess);
+        var actualValue = userDao.getById(1L);
+        var expectedValue = copy(user1);
+        expectedValue.setEmail("invalidEmail");
 
-        var me = userDao.getById(6L);
-        // 对比更新前，只更新了email字段
-        Assertions.assertEquals(new User(6L, "garry", 30, "invalidEmail"), me);
+        assertEquals(expectedValue, actualValue);
     }
 
     @Test
     public void test_ListNeverReturnNull() {
         var noEmail = userDao.list(new LambdaQueryWrapper<User>().eq(User::getEmail, "NoEmail"));
         Assertions.assertNotNull(noEmail);
-        Assertions.assertEquals(noEmail.size(), 0);
+        assertEquals(noEmail.size(), 0);
     }
 
     @Test
@@ -90,9 +104,9 @@ public class SqlTest {
                 .eq(User::getName, "Sandy");
         Predicate<List<User>> hasUserCalledSandy = (users) -> users.stream().anyMatch(user -> Objects.equals(user.getName(), "Sandy"));
         var list = userDao.list();
-        Assertions.assertTrue(hasUserCalledSandy.test(list));
+        assertTrue(hasUserCalledSandy.test(list));
         var removed = userDao.remove(deleteCondition);
-        Assertions.assertTrue(removed);
+        assertTrue(removed);
         list = userDao.list();
         Assertions.assertFalse(hasUserCalledSandy.test(list));
     }
@@ -115,4 +129,8 @@ public class SqlTest {
         System.out.println(user);
     }
 
+
+    private User copy(User source) {
+        return new User(source.getId(), source.getName(), source.getAge(), source.getEmail());
+    }
 }
