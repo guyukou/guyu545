@@ -2,8 +2,9 @@ package com.garry.mybatisbaomidou;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.garry.mybatisbaomidou.user.User;
 import com.garry.mybatisbaomidou.dao.UserDao;
+import com.garry.mybatisbaomidou.user.User;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import static com.garry.mybatisbaomidou.enums.SexEnum.FEMALE;
+import static com.garry.mybatisbaomidou.enums.SexEnum.MALE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -22,13 +25,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * @date 2023/4/4 22:14
  */
 @SpringBootTest
-public class SqlTest {
+public class UpdateTest {
 
     @Autowired
     private UserDao userDao;
 
-    private static final User user1 = new User(1L, "garry", 30, "guyu545kou@gmail.com");
-    private static final User user2 = new User(2L, "lily", 18, "lily@world.com");
+    private static final User user1 = new User(1L, MALE, "garry", 30, 1, "guyu545kou@gmail.com");
+    private static final User user2 = new User(2L, FEMALE, "lily", 18, 1, "lily@world.com");
 
     @BeforeEach
     public void init() {
@@ -42,7 +45,7 @@ public class SqlTest {
      */
     @Test
     public void test_updatePart_1() {
-        var updateParams = new User(null, null, null, "invalidEmail");
+        var updateParams = new User(null, null, null, null, 1, "invalidEmail");
         var whereCondition = new LambdaQueryWrapper<User>()
                 .eq(User::getId, 1L);
         userDao.update(updateParams, whereCondition);
@@ -70,12 +73,13 @@ public class SqlTest {
         expectedValue.setAge(16);
         assertEquals(expectedValue, actualValue);
     }
+
     /**
      * 部分更新: updateById
      */
     @Test
     public void test_updatePart_byId() {
-        var updateParams = new User(1L, null, null, "invalidEmail");
+        var updateParams = new User(1L, null, null, 2, 1, "invalidEmail");
         userDao.updateById(updateParams);
 
         var actualValue = userDao.getById(1L);
@@ -83,6 +87,20 @@ public class SqlTest {
         expectedValue.setEmail("invalidEmail");
 
         assertEquals(expectedValue, actualValue);
+    }
+
+    @Test
+    public void test_save_callbackId() {
+        var nick = new User(null, MALE, "nick", 12, 1, "nick@gmail.com");
+        userDao.save(nick);
+        assertNotNull(nick.getId());
+
+
+        var tom = new User(null, MALE, "tom", 3, 1, "tom@gmail.com");
+        var jerry = new User(null, MALE, "jerry", 3, 1, "jerry@gmail.com");
+        userDao.saveBatch(Lists.newArrayList(tom, jerry));
+        assertNotNull(tom.getId());
+        assertNotNull(jerry.getId());
     }
 
     @Test
@@ -94,8 +112,8 @@ public class SqlTest {
 
     @Test
     public void test_InsertThrowDuplicateException() {
-        var existOne = new User(null,"garry",null,"invalidEmail");
-        Assertions.assertThrows(DuplicateKeyException.class, ()->userDao.save(existOne));
+        var existOne = new User(null, null, "garry", null, 1, "invalidEmail");
+        Assertions.assertThrows(DuplicateKeyException.class, () -> userDao.save(existOne));
     }
 
     @Test
@@ -131,6 +149,6 @@ public class SqlTest {
 
 
     private User copy(User source) {
-        return new User(source.getId(), source.getName(), source.getAge(), source.getEmail());
+        return new User(source.getId(), source.getSex(), source.getName(), source.getAge(), 1, source.getEmail());
     }
 }
