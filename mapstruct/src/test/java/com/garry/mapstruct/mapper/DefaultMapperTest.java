@@ -4,6 +4,7 @@ import com.garry.mapstruct.bean.DistinctBeanA;
 import com.garry.mapstruct.bean.DistinctBeanB;
 import com.garry.mapstruct.bean.SameBeanA;
 import com.garry.mapstruct.bean.SameBeanB;
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -66,7 +67,7 @@ class DefaultMapperTest {
         var distinctBeanA = DistinctBeanA.builder()
                 .id(id)
                 .name(name)
-                .address(null)
+                .address(Lists.newArrayList())
                 .build();
         var distinctBeanB = DistinctBeanB.builder()
                 .identifier(id)
