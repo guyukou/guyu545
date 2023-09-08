@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: dev
+  wmb:
+    subject1: 1
+    subject2: 2

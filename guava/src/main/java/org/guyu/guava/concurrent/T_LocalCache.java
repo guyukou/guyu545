@@ -1,6 +1,9 @@
 package org.guyu.guava.concurrent;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.cache.CacheBuilder;
@@ -24,15 +27,25 @@ public class T_LocalCache {
                     });
 
     public static void main(String[] args) throws Exception {
-        for (int i = 0; i < 50; i++) {
-            TimeUnit.SECONDS.sleep(1);
-            System.out.println(myCache.get("ggyy1"));
-            System.out.println(myCache.get("ggyy2"));
+        ExecutorService es = Executors.newFixedThreadPool(100);
+        for (int i = 0; i < 100; i++) {
+            es.execute(()-> {
+                try {
+                    System.out.println(myCache.get("garry"));
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 
     private static String getStrVal(String input) {
         System.out.println("getStrVal at: " + LocalDateTime.now());
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return input + "_gy";
     }
 }

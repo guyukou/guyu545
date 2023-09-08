@@ -126,19 +126,11 @@ public class LocalDateUtils {
     }
 
     public static void main(String[] args) {
-//        String startDate = "2022-08-31";
-//        String endDate = "2022-09-11";
-//        final LocalDate start = parseDate(startDate);
-//        final LocalDate end = parseDate(endDate);
-//
-//        final int days = (int) start.until(end, ChronoUnit.DAYS);
-//
-//        List<String> collect = Stream.iterate(start, d -> d.plusDays(1))
-//                .map(LocalDateUtils::formatDate)
-//                .limit(days + 1)
-//                .collect(Collectors.toList());
-//        System.out.println(collect);
-        System.out.println(ChronoUnit.DAYS.between( LocalDate.now(),timestamp2LocalDate(1673107199 * 1000L)) + 1);
+        var localDateTime = LocalDateTime.now().minusMinutes(1);
+        System.out.println(localDateTime);
+        System.out.println(localDateTime
+                .atZone(ZoneId.systemDefault())
+                .toInstant().toEpochMilli());
     }
 
 

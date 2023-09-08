@@ -1,32 +1,25 @@
 package com.guyu;
 
-import com.guyu.util.LazyBoy;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executors;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author guyu06
  * @date 2023/3/2 18:03
  */
 public class Main {
-    private static final ArrayBlockingQueue<Long> queue = new ArrayBlockingQueue<>(1000);
+
 
     public static void main(String[] args) {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            while (true) {
-                Long offer = null;
-                try {
-                    offer = queue.take();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                System.out.println(offer);
-            }
-        });
-        for (int i = 0; i < 10; i++) {
-            LazyBoy.sleepS(1);
-            queue.add((long) i);
-        }
+        Set<String> s = null;
+        Sets.newHashSet(s);
     }
+
+
 }

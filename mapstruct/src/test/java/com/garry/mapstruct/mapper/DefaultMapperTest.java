@@ -1,9 +1,6 @@
 package com.garry.mapstruct.mapper;
 
-import com.garry.mapstruct.bean.DistinctBeanA;
-import com.garry.mapstruct.bean.DistinctBeanB;
-import com.garry.mapstruct.bean.SameBeanA;
-import com.garry.mapstruct.bean.SameBeanB;
+import com.garry.mapstruct.bean.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -11,6 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author guyu06
@@ -37,6 +35,15 @@ class DefaultMapperTest {
                 .name(name)
                 .build();
         Assertions.assertEquals(sameBeanA, defaultMapper.mapSingleOfSame(sameBeanB));
+    }
+
+    @Test
+    void test_mapSameClass() {
+        var refBeanA = RefBeanA.builder()
+                .i(10)
+                .map(Map.of("1", "b"))
+                .build();
+        Assertions.assertEquals(refBeanA, defaultMapper.mapSameClass(refBeanA));
     }
 
     @Test
@@ -75,4 +82,10 @@ class DefaultMapperTest {
                 .build();
         Assertions.assertEquals(distinctBeanA, defaultMapper.mapSingleOfDistinct(distinctBeanB));
     }
+//
+//    @Test
+//    void test_mapToMapField() {
+//        var jerry = defaultMapper.mapToMapField("jerry", 32);
+//        System.out.println(jerry);
+//    }
 }

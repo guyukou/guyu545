@@ -1,0 +1,4 @@
+spring:
+  wmb:
+    subject1: 10
+    subject2: 20

@@ -1,0 +1,7 @@
+wlock:
+  enabled: true #控制方法上的锁注解是否开启
+  key: E9DB36C9FD1537BC7452CD5D99406661
+  registry-server-ip: wlock.registryserver.offline.58dns.org
+  registry-server-port: 22020
+  expire-time: 5000 #锁过期时间默认值，方法上注解可以重新指定
+  max-wait-time: 5000 #获取锁等待的最大时间默认值，方法上注解可以重新指定

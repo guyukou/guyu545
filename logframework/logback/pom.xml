@@ -32,6 +32,21 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-wtrace</artifactId>
+            <version>8.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.skywalking</groupId>
+            <artifactId>apm-toolkit-logback-1.x</artifactId>
+            <version>8.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.anjuke.property</groupId>
+            <artifactId>hbg-property-framework</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>
