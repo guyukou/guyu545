@@ -15,7 +15,7 @@ import java.util.Map;
  * @author guyu06
  * @date 2023/2/17 00:06
  */
-@Mapper
+@Mapper(imports = {com.google.common.collect.Lists.class})
 public interface DefaultMapper {
     SameBeanA mapSingleOfSame(SameBeanB source);
 
@@ -24,7 +24,7 @@ public interface DefaultMapper {
 
     @Mapping(target = "id", source = "identifier")
     @Mapping(target = "name", source = "trueName")
-    @Mapping(target = "address", source = "dizhi", defaultExpression = "java(com.google.common.collect.Lists.newArrayList())")
+    @Mapping(target = "address", source = "dizhi", defaultExpression = "java(Lists.newArrayList())")
     DistinctBeanA mapSingleOfDistinct(DistinctBeanB source);
 
 //    @Mapping(target = "age", source = "s2")
